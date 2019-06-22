@@ -1,0 +1,9 @@
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.Calculator {
+	margin-top: 20vh;
+	margin-left: 40vw;
+}

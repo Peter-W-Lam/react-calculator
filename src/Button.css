@@ -1,0 +1,13 @@
+.Button input {
+	background-color: #4CAF50; /* Green */
+	  border: none;
+	  color: white;
+	  padding: 15px 32px;
+	  margin: 10px;
+	  /*width: 100px;*/
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+}
+
