@@ -2,40 +2,49 @@ import React, { Component } from "react"
 import './Calculator.css'
 import Button from './Button'
 import Output from './Output'
-class Calculator extends Component {
+import ChildComponent from './ChildComponent'
 
+class Calculator extends Component {
+	constructor(props) {
+		super(props)
+		this.handleClick = this.handleClick.bind(this)
+	}
+
+	handleClick(val) {
+		console.log(val)
+	}
 	render() {
 		return(
 			<div className="Calculator">
-				<Output />
+				<Output audi="Some output here"/>
 				<div className="row">
-					<Button val="C" />
-					<Button val="+/-" />
-					<Button val="%" />
-					<Button val="/" />
+					<Button val="C" trigger={this.handleClick}/>
+					<Button val="+/-" trigger={this.handleClick}/>
+					<Button val="%" trigger={this.handleClick}/>
+					<Button val="/" trigger={this.handleClick}/>
 				</div>
 				<div className="row">
-					<Button val="7" />
-					<Button val="8" />
-					<Button val="9" />
-					<Button val="x" />
+					<Button val="7" trigger={this.handleClick}/>
+					<Button val="8" trigger={this.handleClick}/>
+					<Button val="9" trigger={this.handleClick}/>
+					<Button val="x" trigger={this.handleClick}/>
 				</div>
 				<div className="row">
-					<Button val="4" />
-					<Button val="5" />
-					<Button val="6" />
-					<Button val="-" />
+					<Button val="4" trigger={this.handleClick}/>
+					<Button val="5" trigger={this.handleClick}/>
+					<Button val="6" trigger={this.handleClick}/>
+					<Button val="-" trigger={this.handleClick}/>
 				</div>
 				<div className="row">
-					<Button val="1" />
-					<Button val="2" />
-					<Button val="3" />
-					<Button val="+" />
+					<Button val="1" trigger={this.handleClick}/>
+					<Button val="2" trigger={this.handleClick}/>
+					<Button val="3" trigger={this.handleClick}/>
+					<Button val="+" trigger={this.handleClick}/>
 				</div>
 				<div className="row">
-					<Button val="0" />
-					<Button val="." />
-					<Button val="=" />
+					<Button val="0" trigger={this.handleClick}/>
+					<Button val="." trigger={this.handleClick}/>
+					<Button val="=" trigger={this.handleClick}/>
 				</div>
 			</div>
 			

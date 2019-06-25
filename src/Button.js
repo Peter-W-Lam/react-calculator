@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import './Button.css'
 class Button extends React.Component {
+	constructor(props) {
+		super(props)
+		
+	}
+
+
 	render() {
 		return(
 			<div className="Button">
-				<input type="button" value={this.props.val} />
+				<button onClick={()=> this.props.trigger(this.props.val)}>{this.props.val}</button> 
 			</div>
 		)
 		
