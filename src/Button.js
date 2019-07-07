@@ -3,14 +3,12 @@ import './Button.css'
 class Button extends React.Component {
 	constructor(props) {
 		super(props)
-		
 	}
-
 
 	render() {
 		return(
 			<div className="Button">
-				<button onClick={()=> this.props.trigger(this.props.val)}>{this.props.val}</button> 
+				<button onClick={() => this.props.handleClick(this.props.val)}>{this.props.val}</button> 
 			</div>
 		)
 		
