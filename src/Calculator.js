@@ -5,15 +5,20 @@ import Output from './Output'
 import ChildComponent from './ChildComponent'
 
 class Calculator extends Component {
+	
+
 	constructor(props) {
 		super(props)
 		this.updateOutput = this.updateOutput.bind(this)
 		this.appendOutput = this.appendOutput.bind(this)
 		this.clearOutput = this.clearOutput.bind(this)
+		this.equals = this.equals.bind(this)
+		this.setOperation = this.setOperation.bind(this)
 		this.state = {out: "0"}
-		this.num1 = 0
-		this.num2 = 0
-		this.operation = 0
+		this.firstOperand = 0
+		this.secondOperand = 0
+		this.operation = ""
+		this.waitingForOperand = false
 	}
 
 	updateOutput(val) {
@@ -25,7 +30,7 @@ class Calculator extends Component {
 	}
 
 	appendOutput(val) {	
-		if (this.state.out == "0" || !this.isNumber(this.state.out)) {
+		if (this.state.out === "0" || !this.isNumber(this.state.out)) {
 			this.updateOutput(val)
 		} else {
 			this.setState((prevState) => {
@@ -49,6 +54,44 @@ class Calculator extends Component {
 	}
 
 	/* Operations */
+	equals() {
+		
+
+		switch (this.operation) {
+			case "+": 
+				var tempVar = parseInt(this.state.out)
+				if (Number.isNaN(tempVar)) {
+					if (this.waitingForOperand) {
+						this.secondOperand = this.firstOperand
+					} 
+				} else {
+					if (this.waitingForOperand) {
+						this.secondOperand = tempVar
+					}
+				}
+				var sum = this.secondOperand + this.firstOperand;
+				this.setState({out: sum})
+				console.log("First operand: " + this.firstOperand)
+				console.log("Second operand: " + this.secondOperand)
+				this.waitingForOperand = false
+				this.firstOperand = sum
+				break
+			default: 
+				this.setState({out: "0"})
+				this.operation = ""
+		}
+	}
+
+	setOperation(val) {
+		if (this.waitingForOperand) {
+			this.equals()
+		}
+		this.firstOperand = parseInt(this.state.out)
+		this.waitingForOperand = true
+		this.operation = val
+		
+		this.setState({out: val})
+	}
 
 	render() {
 		return(
@@ -76,12 +119,12 @@ class Calculator extends Component {
 					<Button val="1" handleClick={this.appendOutput}/>
 					<Button val="2" handleClick={this.appendOutput}/>
 					<Button val="3" handleClick={this.appendOutput}/>
-					<Button val="+" handleClick={this.updateOutput}/>
+					<Button val="+" handleClick={this.setOperation}/>
 				</div>
 				<div className="row">
 					<Button val="0" handleClick={this.appendOutput}/>
 					<Button val="." handleClick={this.updateOutput}/>
-					<Button val="=" handleClick={this.updateOutput}/>
+					<Button val="=" handleClick={this.equals}/>
 				</div>
 			</div>
 			
