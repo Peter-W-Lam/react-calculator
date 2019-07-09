@@ -76,6 +76,23 @@ class Calculator extends Component {
 				this.waitingForOperand = false
 				this.firstOperand = sum
 				break
+			case "-":
+				var tempVar = parseInt(this.state.out)
+				if (Number.isNaN(tempVar)) {
+					if (this.waitingForOperand) {
+						this.secondOperand = this.firstOperand
+					} 
+				} else {
+					if (this.waitingForOperand) {
+						this.secondOperand = tempVar
+					}
+				}
+				var answer = this.firstOperand - this.secondOperand;
+				console.log(answer)
+				this.setState({out: answer})
+				this.waitingForOperand = false
+				this.firstOperand = sum
+				break
 			default: 
 				this.setState({out: "0"})
 				this.operation = ""
@@ -89,7 +106,6 @@ class Calculator extends Component {
 		this.firstOperand = parseInt(this.state.out)
 		this.waitingForOperand = true
 		this.operation = val
-		
 		this.setState({out: val})
 	}
 
@@ -113,7 +129,7 @@ class Calculator extends Component {
 					<Button val="4" handleClick={this.appendOutput}/>
 					<Button val="5" handleClick={this.appendOutput}/>
 					<Button val="6" handleClick={this.appendOutput}/>
-					<Button val="-" handleClick={this.updateOutput}/>
+					<Button val="-" handleClick={this.setOperation}/>
 				</div>
 				<div className="row">
 					<Button val="1" handleClick={this.appendOutput}/>
