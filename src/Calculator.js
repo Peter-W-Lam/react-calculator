@@ -3,144 +3,163 @@ import './Calculator.css'
 import Button from './Button'
 import Output from './Output'
 import ChildComponent from './ChildComponent'
-
+import phone from './iphone.png'
 class Calculator extends Component {
 	
 
 	constructor(props) {
 		super(props)
-		this.updateOutput = this.updateOutput.bind(this)
-		this.appendOutput = this.appendOutput.bind(this)
-		this.clearOutput = this.clearOutput.bind(this)
+		this.clear = this.clear.bind(this)
 		this.equals = this.equals.bind(this)
-		this.setOperation = this.setOperation.bind(this)
-		this.state = {out: "0"}
-		this.firstOperand = 0
-		this.secondOperand = 0
-		this.operation = ""
+
+		this.changeSign = this.changeSign.bind(this)
+		this.percentage = this.percentage.bind(this)
+		this.numberHandle = this.numberHandle.bind(this)
+		this.concatInput = this.concatInput.bind(this)
+		this.operation = this.operation.bind(this)
+		this.state = {output: "0", 
+					  firstOperand: 0, 
+					  secondOperand: 0, 
+					  waitingForOperand: false, 
+					  operation: "", 
+					  reset: true}
+
+
 		this.waitingForOperand = false
 	}
 
-	updateOutput(val) {
-		this.setState({out: val})
+	clear(val) {
+		this.setState({output: "0", reset: true})
 	}
 
-	clearOutput() {
-		this.setState({out: "0"})
+	operation(val) {
+		this.setState({output: val, operation: val, waitingForOperand: true})
 	}
 
-	appendOutput(val) {	
-		if (this.state.out === "0" || !this.isNumber(this.state.out)) {
-			this.updateOutput(val)
+	
+	numberHandle(val) {
+		var currentOutput = this.state.output
+		var newOutput = this.concatInput(currentOutput, val)
+		if (this.state.waitingForOperand) {
+			this.setState(prevState => {
+				return {secondOperand: Number.parseFloat(newOutput)}
+			})
+
 		} else {
-			this.setState((prevState) => {
-				return {out: prevState.out.concat(val)}
+			this.setState(prevState => {
+				return {firstOperand: Number.parseFloat(newOutput)}
+			}, () => {
 			})
 		}
 	}
 
-	isNumber(val) {
-		return (val.includes("0") || 
-				val.includes("1") ||
-				val.includes("2") ||
-				val.includes("3") ||
-				val.includes("4") ||
-				val.includes("5") ||
-				val.includes("6") ||
-				val.includes("7") ||
-				val.includes("8") ||
-				val.includes("9") 
-		)
+
+	//TODO: Refactor this
+	concatInput(currentOutput, newVal) {
+		var toReturn = ""
+		// Case of trying to add a second decimal point
+		if (newVal === "." && currentOutput.includes(".")) {
+			toReturn = currentOutput
+		}
+		// If previous input is operation sign 
+		else if (isNaN(Number.parseFloat(currentOutput))) {
+			toReturn = newVal
+		}
+		// If leading zero / a reset is needed
+		else if (this.state.reset && newVal != ".") {
+			toReturn = newVal
+			this.setState({reset: false})
+		} 
+		else { // All others
+			toReturn = this.state.output.concat(newVal)
+		}
+		this.setState({output: toReturn})
+		return toReturn
 	}
 
 	/* Operations */
-	equals() {
-		
-
-		switch (this.operation) {
+	equals(val) {
+		console.log("First Operand: ", this.state.firstOperand, ", Second Operand: ", 
+					this.state.secondOperand)
+		this.setState({waitingForOperand: false})
+		switch(this.state.operation) {
 			case "+": 
-				var tempVar = parseInt(this.state.out)
-				if (Number.isNaN(tempVar)) {
-					if (this.waitingForOperand) {
-						this.secondOperand = this.firstOperand
-					} 
-				} else {
-					if (this.waitingForOperand) {
-						this.secondOperand = tempVar
-					}
-				}
-				var sum = this.secondOperand + this.firstOperand;
-				this.setState({out: sum})
-				console.log("First operand: " + this.firstOperand)
-				console.log("Second operand: " + this.secondOperand)
-				this.waitingForOperand = false
-				this.firstOperand = sum
+				let result = this.state.firstOperand + this.state.secondOperand
+				this.setState({output: result.toString(), firstOperand: result})
 				break
-			case "-":
-				var tempVar = parseInt(this.state.out)
-				if (Number.isNaN(tempVar)) {
-					if (this.waitingForOperand) {
-						this.secondOperand = this.firstOperand
-					} 
-				} else {
-					if (this.waitingForOperand) {
-						this.secondOperand = tempVar
-					}
-				}
-				var answer = this.firstOperand - this.secondOperand;
-				console.log(answer)
-				this.setState({out: answer})
-				this.waitingForOperand = false
-				this.firstOperand = sum
+			case "-": 
+				let result2 = this.state.firstOperand - this.state.secondOperand
+				this.setState({output: result2.toString(), firstOperand: result2})
 				break
-			default: 
-				this.setState({out: "0"})
-				this.operation = ""
+			case "x": 
+				let result3 = this.state.firstOperand * this.state.secondOperand
+				this.setState({output: result3.toString(), firstOperand: result3})
+				break
+			case "/": 
+				let result4 = this.state.firstOperand / this.state.secondOperand
+				this.setState({output: result4.toString(), firstOperand: result4})
+				break
+		}
+		this.setState({reset: true})
+	}
+
+	percentage(val) {
+		this.setState({waitingForOperand: false})
+		var toMultiply = 1
+		if (this.state.secondOperand != 0) {
+			toMultiply = this.state.secondOperand * 0.01
+		}
+		let result = this.state.firstOperand * toMultiply
+		this.setState({output: result.toString(), firstOperand: result, reset: true})
+	}
+
+	changeSign(val) {
+		if (this.state.waitingForOperand) {
+			var negated = this.state.secondOperand
+			negated = -negated
+			this.setState({output: negated.toString(), secondOperand: negated})
+		} else {
+			var negated = this.state.firstOperand
+			negated = -negated
+			this.setState({output: negated.toString(), firstOperand: negated})
 		}
 	}
 
-	setOperation(val) {
-		if (this.waitingForOperand) {
-			this.equals()
-		}
-		this.firstOperand = parseInt(this.state.out)
-		this.waitingForOperand = true
-		this.operation = val
-		this.setState({out: val})
-	}
 
 	render() {
 		return(
 			<div className="Calculator">
-				<Output out={this.state.out}/>
-				<div className="row">
-					<Button val="C" handleClick={this.clearOutput}/>
-					<Button val="+/-" handleClick={this.updateOutput}/>
-					<Button val="%" handleClick={this.updateOutput}/>
-					<Button val="/" handleClick={this.updateOutput}/>
-				</div>
-				<div className="row">
-					<Button val="7" handleClick={this.appendOutput}/>
-					<Button val="8" handleClick={this.appendOutput}/>
-					<Button val="9" handleClick={this.appendOutput}/>
-					<Button val="x" handleClick={this.updateOutput}/>
-				</div>
-				<div className="row">
-					<Button val="4" handleClick={this.appendOutput}/>
-					<Button val="5" handleClick={this.appendOutput}/>
-					<Button val="6" handleClick={this.appendOutput}/>
-					<Button val="-" handleClick={this.setOperation}/>
-				</div>
-				<div className="row">
-					<Button val="1" handleClick={this.appendOutput}/>
-					<Button val="2" handleClick={this.appendOutput}/>
-					<Button val="3" handleClick={this.appendOutput}/>
-					<Button val="+" handleClick={this.setOperation}/>
-				</div>
-				<div className="row">
-					<Button val="0" handleClick={this.appendOutput}/>
-					<Button val="." handleClick={this.updateOutput}/>
-					<Button val="=" handleClick={this.equals}/>
+				<div className="innerElements">
+					<Output out={this.state.output}/>
+					<div className="row">
+						<Button val="C" handleClick={this.clear}/>
+						<Button val="+/-" handleClick={this.changeSign}/>
+						<Button val="%" handleClick={this.percentage}/>
+						<Button val="/" handleClick={this.operation}/>
+					</div>
+					<div className="row">
+						<Button val="7" handleClick={this.numberHandle}/>
+						<Button val="8" handleClick={this.numberHandle}/>
+						<Button val="9" handleClick={this.numberHandle}/>
+						<Button val="x" handleClick={this.operation}/>
+					</div>
+					<div className="row">
+						<Button val="4" handleClick={this.numberHandle}/>
+						<Button val="5" handleClick={this.numberHandle}/>
+						<Button val="6" handleClick={this.numberHandle}/>
+						<Button val="-" handleClick={this.operation}/>
+					</div>
+					<div className="row">
+						<Button val="1" handleClick={this.numberHandle}/>
+						<Button val="2" handleClick={this.numberHandle}/>
+						<Button val="3" handleClick={this.numberHandle}/>
+						<Button val="+" handleClick={this.operation}/>
+					</div>
+					<div className="row">
+						<Button val="0" handleClick={this.numberHandle}/>
+						<Button val="." handleClick={this.numberHandle}/>
+						<Button val="=" handleClick={this.equals}/>
+					</div>
 				</div>
 			</div>
 			

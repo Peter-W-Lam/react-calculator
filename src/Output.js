@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-
+import './Output.css'
 class Output extends Component {
 	constructor(props) {
 		super(props)
@@ -7,7 +7,6 @@ class Output extends Component {
 	}
 
 	render() {
-
 		return(
 			<div className="Output">
 				<h1>{this.props.out}</h1>

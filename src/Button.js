@@ -8,10 +8,9 @@ class Button extends React.Component {
 	render() {
 		return(
 			<div className="Button">
-				<button onClick={() => this.props.handleClick(this.props.val)}>{this.props.val}</button> 
+				<button className="hvr-sweep-to-top" onClick={() => this.props.handleClick(this.props.val)}>{this.props.val}</button> 
 			</div>
 		)
-		
 	}
 }
 
