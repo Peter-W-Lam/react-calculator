@@ -7,13 +7,15 @@
 	margin-top: 5vh;
 	margin-left: 40vw;
 	background-image: url("iphone.png");
-	background-size: 425px;
+	background-size: 325px;
 	background-repeat: no-repeat;
-	width: 425px;
-	height: 786px;
+	width: 325px;
+	height: 95vh;
+	padding-bottom: 0;
+	margin-bottom: 0;
 }
 
 .innerElements {
 	padding-top: 80px;
-	padding-left: 70px;
+	padding-left: 50px;
 }

@@ -9,7 +9,7 @@ class Output extends Component {
 	render() {
 		return(
 			<div className="Output">
-				<h1>{this.props.out}</h1>
+				<h1 style={this.props.style}>{this.props.out}</h1>
 			</div>
 		)
 	}

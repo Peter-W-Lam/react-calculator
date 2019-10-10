@@ -7,19 +7,21 @@ button {
 	border-radius: 30px;
 	font-family: 'Work Sans', sans-serif;
 	font-weight: 300;
+	font-size: 22px;
 	color: white;
-	height: 60px;
-	width: 60px;
+	height: 45px;
+	width: 45px;
 	margin: 6px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 30px;
+	
 	transition: background-color 0.25s ease;
 }
 
 button:hover {
 	background-color: #FF6B6B;
+	cursor: pointer;
 }
 
 button:active {

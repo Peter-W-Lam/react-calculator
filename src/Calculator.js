@@ -6,9 +6,10 @@ import ChildComponent from './ChildComponent'
 import phone from './iphone.png'
 class Calculator extends Component {
 	
-
+	
 	constructor(props) {
 		super(props)
+
 		this.clear = this.clear.bind(this)
 		this.equals = this.equals.bind(this)
 
@@ -17,14 +18,13 @@ class Calculator extends Component {
 		this.numberHandle = this.numberHandle.bind(this)
 		this.concatInput = this.concatInput.bind(this)
 		this.operation = this.operation.bind(this)
+		this.configureOutput = this.configureOutput.bind(this)
 		this.state = {output: "0", 
 					  firstOperand: 0, 
 					  secondOperand: 0, 
 					  waitingForOperand: false, 
 					  operation: "", 
 					  reset: true}
-
-
 		this.waitingForOperand = false
 	}
 
@@ -116,21 +116,48 @@ class Calculator extends Component {
 	changeSign(val) {
 		if (this.state.waitingForOperand) {
 			var negated = this.state.secondOperand
-			negated = -negated
+			if (negated != 0) {
+				negated = -negated
+			}
 			this.setState({output: negated.toString(), secondOperand: negated})
 		} else {
 			var negated = this.state.firstOperand
-			negated = -negated
+			if (negated != 0) {
+				negated = -negated
+			}
 			this.setState({output: negated.toString(), firstOperand: negated})
 		}
 	}
 
+	configureOutput(out) {
+		var style = {
+		}
+		if (out.length < 12) {
+			style = {
+				fontSize: "35px",
+				paddingBottom: "0px"
+			}
+		} else if (out.length >= 12 && out.length <= 20) {
+			style = {
+				fontSize: "20px",
+				paddingTop: "14px", 
+				paddingBottom: "14px"
+			}
+		} else {
+			style = {
+				fontSize: "17px",
+				paddingTop: "17px",
+				paddingBottom: "17px"
+			}
+		}
+		return style
+	}
 
 	render() {
 		return(
 			<div className="Calculator">
 				<div className="innerElements">
-					<Output out={this.state.output}/>
+					<Output style={this.configureOutput(this.state.output)} out={this.state.output}/>
 					<div className="row">
 						<Button val="C" handleClick={this.clear}/>
 						<Button val="+/-" handleClick={this.changeSign}/>
