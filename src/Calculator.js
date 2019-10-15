@@ -29,7 +29,10 @@ class Calculator extends Component {
 	}
 
 	clear(val) {
-		this.setState({output: "0", reset: true})
+		this.setState({output: "0", 
+					   firstOperand: 0, 
+					   secondOperand: 0, 
+					   reset: true})
 	}
 
 	operation(val) {
